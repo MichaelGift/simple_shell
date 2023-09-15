@@ -17,7 +17,7 @@ int main(int arg_c, char **arg_v)
 			: "r" (file_d));
 	if (arg_c == 2)
 	{
-		fd = open(arg_v[1], O_RDONLY);
+		file_d = open(arg_v[1], O_RDONLY);
 		if (file_d == -1)
 		{
 			if (errno == EACCES)
@@ -25,7 +25,7 @@ int main(int arg_c, char **arg_v)
 			if (errno == ENOENT)
 			{
 				puts_error(arg_v[0]);
-				puts_error(": 0: Cannot open ");
+				puts_error(": 0: Can't open ");
 				puts_error(arg_v[1]);
 				put_char_to_stderr('\n');
 				put_char_to_stderr(FLUSH_BUFFER);

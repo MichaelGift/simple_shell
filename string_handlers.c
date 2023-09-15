@@ -27,15 +27,15 @@ char *strn_cpy(char *dest, char *src, int len)
 	int i = 0, j;
 	char *s = dest;
 
-	while (src[i] != '\0' && i < n - 1)
+	while (src[i] != '\0' && i < len - 1)
 	{
 		dest[i] = src[i];
 		i++;
 	}
-	if (i < n)
+	if (i < len)
 	{
 		j = i;
-		while (j < n)
+		while (j < len)
 		{
 			dest[j] = '\0';
 			j++;
@@ -58,13 +58,13 @@ char *strn_cat(char *dest, char *src, int len)
 
 	while (dest[i] != '\0')
 		i++;
-	while (src[j] != '\0' && j < n)
+	while (src[j] != '\0' && j < len)
 	{
 		dest[i] = src[j];
 		i++;
 		j++;
 	}
-	if (j < n)
+	if (j < len)
 		dest[i] = '\0';
 	return (s);
 }

@@ -132,7 +132,7 @@ int delete_node_at_index(str_ll **head, unsigned int index)
 		}
 		i++;
 		prev_node = current_node;
-		node = current_node->next;
+		current_node = current_node->next;
 	}
 	return (0);
 }

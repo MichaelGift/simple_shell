@@ -18,7 +18,7 @@ char *number_converter(long int num, int base, int flags)
 	if (!(flags & CONVERT_UNSIGNED) && num < 0)
 	{
 		n = -num;
-		singn = '-';
+		sign = '-';
 	}
 	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
 	ptr = &buffer[49];
@@ -88,9 +88,9 @@ int error_sti(char *str)
  */
 void output_error(shell_info *info, char *e_str_t)
 {
-	puts_error(info->file_name);
+	puts_error(info->fname);
 	puts_error(": ");
-	print_decimal(info->lines, STDERR_FILENO);
+	print_decimal(info->line_count, STDERR_FILENO);
 	puts_error(": ");
 	puts_error(info->argv[0]);
 	puts_error(": ");
@@ -109,8 +109,8 @@ int print_decimal(int input, int file_d)
 	int i, count = 0;
 	unsigned int _abs_, current;
 
-	if (file_d == STRDERR_FILENO)
-		__putchar == put_char_to_stderr;
+	if (file_d == STDERR_FILENO)
+		__putchar = put_char_to_stderr;
 	if (input < 0)
 	{
 		_abs_ = -input;

@@ -1,6 +1,6 @@
 #include "shell.h"
 /**
- * llist_to_strarr - will return an array of strings of the list
+ * llist_to_strarr - Return an array of strings of list
  * @head: pointer to the first node
  * Return: array of strings
  */
@@ -10,7 +10,7 @@ char **llist_to_strarr(str_ll *head)
 	size_t i = list_str_ll_len(head), j;
 	char **strs;
 	char *str;
-	
+
 	if (!head || !i)
 		return (NULL);
 	strs = malloc(sizeof(char *) * (i + 1));
@@ -104,7 +104,7 @@ size_t print_llist(const str_ll *head)
 	while (head)
 	{
 		custom_puts(number_converter(head->num, 10, 0));
-		custom_putchar(' : ');
+		custom_putchar(':');
 		custom_putchar(' ');
 		custom_puts(head->str ? head->str : "(nil)");
 		custom_puts("\n");

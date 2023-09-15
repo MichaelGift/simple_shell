@@ -23,7 +23,7 @@ int main_shell_loop(shell_info *info, char **args)
 		read_result = get_input_command(info);
 		if (read_result != -1)
 		{
-			set_shell_info(info, agv);
+			set_shell_info(info, args);
 			builtin_result = find_and_execute_builtin(info);
 			if (builtin_result == -1)
 				find_and_execute_cmd(info);
@@ -42,10 +42,10 @@ int main_shell_loop(shell_info *info, char **args)
 
 	if (builtin_result == -2)
 	{
-		if (info->error_number == -1)
+		if (info->err_num == -1)
 			exit(info->status);
 
-		exit(info->error_number);
+		exit(info->err_num);
 	}
 	return (builtin_result);
 }
@@ -70,7 +70,7 @@ int find_and_execute_builtin(shell_info *info)
 		{NULL, NULL}
 	};
 
-	for (i = 0; builtin_commands[i].command, i++)
+	for (i = 0; builtin_commands[i].command; i++)
 	{
 		if (str_cmp(info->argv[0], builtin_commands[i].command) == 0)
 		{
@@ -83,7 +83,7 @@ int find_and_execute_builtin(shell_info *info)
 }
 
 /**
- * find_command - find a command in PATH
+ * find_and_execute_cmd - find a command in PATH
  * @info: struct address
  */
 void find_and_execute_cmd(shell_info *info)
@@ -103,7 +103,7 @@ void find_and_execute_cmd(shell_info *info)
 	if (!k)
 		return;
 
-	path = find_cmd_path(info, get_env(info, "PATH="), infor->argv[0]);
+	path = find_cmd_path(info, get_env(info, "PATH="), info->argv[0]);
 	if (path)
 	{
 		info->path = path;

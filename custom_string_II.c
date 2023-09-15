@@ -56,7 +56,7 @@ void custom_puts(char *str)
 	while (str[index] != '\0')
 	{
 		custom_putchar(str[index]);
-		i++;
+		index++;
 	}
 }
 

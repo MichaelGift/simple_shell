@@ -61,7 +61,7 @@ void check_cmd_chain(
 		if (!info->status)
 		{
 			buffer[i] = 0;
-			j = len;
+			j = length;
 		}
 	}
 	*ptr = j;
@@ -80,7 +80,7 @@ int alias_replace(shell_info *info)
 
 	for (i = 0; i < 10; i++)
 	{
-		node = node_start_with(info->alias, info->argv[0], '=');
+		node = node_starts_with(info->alias, info->argv[0], '=');
 		if (!node)
 			return (0);
 		free(info->argv[0]);
@@ -88,7 +88,7 @@ int alias_replace(shell_info *info)
 		ptr = str_chr(node->str, '=');
 		if (!ptr)
 			return (0);
-		ptr = str_dup(p + 1);
+		ptr = str_dup(ptr + 1);
 		if (!ptr)
 			return (0);
 		info->argv[0] = ptr;
@@ -112,24 +112,24 @@ int substitute_vars(shell_info *info)
 			continue;
 		if (!str_cmp(info->argv[i], "$?"))
 		{
-			replace_string(&(info->argv[i]),
+			sub_str(&(info->argv[i]),
 					str_dup(number_converter(info->status, 10, 0)));
 			continue;
 		}
 		if (!str_cmp(info->argv[i], "$$"))
 		{
-			replace_string(&(info->argv[i]),
+			sub_str(&(info->argv[i]),
 					str_dup(number_converter(getpid(), 10, 0)));
 			continue;
 		}
 		node = node_starts_with(info->env, &info->argv[i][1], '=');
 		if (node)
 		{
-			replace_string(&(info->argv[i]),
+			sub_str(&(info->argv[i]),
 					str_dup(str_chr(node->str, '=') + 1));
 			continue;
 		}
-		replace_string(&info->argv[i], str_dup(""));
+		sub_str(&info->argv[i], str_dup(""));
 	}
 	return (0);
 }

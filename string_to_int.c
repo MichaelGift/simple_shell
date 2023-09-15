@@ -9,7 +9,7 @@ int is_interactive(shell_info *info)
 {
 	int mode;
 
-	mode = (isatty(STDIN_FILENO) && info->read_file_D <= 2);
+	mode = (isatty(STDIN_FILENO) && info->read_file_d <= 2);
 	return (mode);
 }
 

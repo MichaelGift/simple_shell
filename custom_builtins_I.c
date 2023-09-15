@@ -30,16 +30,16 @@ int custom_exit(shell_info *info)
 		check_exit = error_sti(info->argv[1]);
 		if (check_exit == -1)
 		{
-			info->status == 2;
+			info->status = 2;
 			output_error(info, "Illegal number: ");
 			puts_error(info->argv[1]);
 			put_char_to_stderr('\n');
 			return (1);
 		}
-		info->error_number = error_sti(info->argv[1]);
+		info->err_num = error_sti(info->argv[1]);
 		return (-2);
 	}
-	info->error_number = -1;
+	info->err_num = -1;
 	return (-2);
 }
 
@@ -69,7 +69,7 @@ int custom_cd(shell_info *info)
 	{
 		if (!get_env(info, "OLDPWD="))
 		{
-			custom_puts(s);
+			custom_puts(cwd);
 			custom_putchar('\n');
 			return (1);
 		}
@@ -81,7 +81,7 @@ int custom_cd(shell_info *info)
 		chdir_ret = chdir(info->argv[1]);
 	if (chdir_ret == -1)
 	{
-		output_error(info, "Cannot CD to ");
+		output_error(info, "can't cd to ");
 		puts_error(info->argv[1]), put_char_to_stderr('\n');
 	}
 	else

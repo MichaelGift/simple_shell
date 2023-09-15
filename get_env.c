@@ -13,7 +13,7 @@ int set_env(shell_info *info, char *var, char *val)
 	str_ll *node;
 	char *ptr;
 
-	if (!var || !value)
+	if (!var || !val)
 		return (0);
 
 	buffer = malloc(str_len(var) + str_len(val) + 2);
@@ -26,8 +26,8 @@ int set_env(shell_info *info, char *var, char *val)
 
 	while (node)
 	{
-		p = if_starts_with_str(node->str, var);
-		if (p && *p == '=')
+		ptr = if_starts_with_str(node->str, var);
+		if (ptr && *ptr == '=')
 		{
 			free(node->str);
 			node->str = buffer;
@@ -49,7 +49,7 @@ int set_env(shell_info *info, char *var, char *val)
  */
 int unset_env(shell_info *info, char *var)
 {
-	str_ll node = info->env;
+	str_ll *node = info->env;
 	size_t i = 0;
 	char *ptr;
 
@@ -58,7 +58,7 @@ int unset_env(shell_info *info, char *var)
 	while (node)
 	{
 		ptr = if_starts_with_str(node->str, var);
-		if (p && *p == '=')
+		if (ptr && *ptr == '=')
 		{
 			info->env_changed = delete_node_at_index(&(info->env), i);
 			i = 0;

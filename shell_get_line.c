@@ -14,20 +14,20 @@ ssize_t input_buffer(shell_info *info, char **buffer, size_t *length)
 
 	if (!*length)
 	{
-		free(buffer);
+		free(*buffer);
 		*buffer = NULL;
 		signal(SIGINT, sigint_handler);
 #if USE_GETLINE
-		r = getline(buffer, &len_p, stdin);
+		bytes_read = getline(buffer, &len_p, stdin);
 #else
-		r = get_line_input(info, buffer, &len_p);
+		bytes_read = get_line_input(info, buffer, &len_p);
 #endif
 		if (bytes_read > 0)
 		{
 			if ((*buffer)[bytes_read - 1] == '\n')
 			{
 				(*buffer)[bytes_read - 1] = '\0';
-				r--;
+				bytes_read--;
 			}
 			info->linecount_flag = 1;
 			replace_comments(*buffer);
@@ -62,7 +62,7 @@ ssize_t get_input_command(shell_info *info)
 		ptr = buffer + i;
 
 		check_cmd_chain(info, buffer, &j, i, length);
-		while (j < len)
+		while (j < length)
 		{
 			if (is_chain_delimiter(info, buffer, &j))
 				break;
@@ -95,7 +95,7 @@ ssize_t read_input_buffer(shell_info *info, char *buffer, size_t *size)
 
 	if (*size)
 		return (0);
-	bytes_read = read(info->read_file_descriptor, buffer, READ_BUFFER_SIZE);
+	bytes_read = read(info->read_file_d, buffer, READ_BUFFER_SIZE);
 	if (bytes_read >= 0)
 		*size = bytes_read;
 	return (bytes_read);
@@ -109,7 +109,7 @@ ssize_t read_input_buffer(shell_info *info, char *buffer, size_t *size)
  * @length: Pointer to size of the buffer
  * Return: Bytes read
  */
-int get_line_input(shell_info *info, char *buffer_ptr, size_t *length)
+int get_line_input(shell_info *info, char **buffer_ptr, size_t *length)
 {
 	static char buffer[READ_BUFFER_SIZE];
 	static size_t i, len;
@@ -127,7 +127,8 @@ int get_line_input(shell_info *info, char *buffer_ptr, size_t *length)
 		return (-1);
 	c = str_chr(buffer + 1, '\n');
 	k = c ? 1 + (unsigned int)(c - buffer) : len;
-	new_ptr = custom_realloc(ptr, total_bytes, total_bytes ? total_bytes + k : k + 1);
+	new_ptr = custom_realloc
+		(ptr, total_bytes, total_bytes ? total_bytes + k : k + 1);
 	if (!new_ptr)
 		return (ptr ? free(ptr), -1 : 1);
 

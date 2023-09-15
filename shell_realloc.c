@@ -40,6 +40,7 @@ char *const_mem_set(char *ptr, char byte, unsigned int len)
 void *custom_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
 	char *new_ptr;
+
 	if (!ptr)
 		return (malloc(new_size));
 	if (!new_size)
@@ -50,7 +51,7 @@ void *custom_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 	new_ptr = malloc(new_size);
 	if (!new_ptr)
 		return (NULL);
-	
+
 	old_size = old_size < new_size ? old_size : new_size;
 	while (old_size--)
 		new_ptr[old_size] = ((char *)ptr)[old_size];

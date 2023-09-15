@@ -1,30 +1,29 @@
 #include "shell.h"
 /**
- * write_shell_history_to_file - it creates a file, or appends it to an existing file
+ * write_shell_history_to_file - Create a file/append it to existing file
  * @info: the parameter struct
  * Return: 1 on success, else -1
  */
 int write_shell_history_to_file(shell_info *info)
 {
-ssize_t fd;
-char *filename = get_history_file_path(info);
-str_ll *node = NULL;
+	ssize_t fd;
+	char *filename = get_history_file_path(info);
+	str_ll *node = NULL;
 
-if (!filename)
-return (-1);
-
-fd = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
-free(filename);
-if (fd == -1)
-return (-1);
-for (node = info->history; node; node = node->next)
-{
-_putsfd(node->str, fd);
-_putfd('\n', fd);
-}
-_putfd(FLUSH_BUFFER, fd);
-close(fd);
-return (1);
+	if (!filename)
+		return (-1);
+	fd = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
+	free(filename);
+	if (fd == -1)
+		return (-1);
+	for (node = info->history; node; node = node->next)
+	{
+		puts_file_d(node->str, fd);
+		put_file_d('\n', fd);
+	}
+	put_file_d(FLUSH_BUFFER, fd);
+	close(fd);
+	return (1);
 }
 
 /**
@@ -73,7 +72,7 @@ int read_history_from_file(shell_info *info)
 		file_size = file_stat.st_size;
 	if (file_size < 2)
 		return (0);
-	buffer = malloc(sizeof(char) * (fsize + 1));
+	buffer = malloc(sizeof(char) * (file_size + 1));
 	if (!buffer)
 		return (0);
 	read_len = read(file_descriptor, buffer, file_size);

@@ -18,7 +18,7 @@ void initialize_shell_info(shell_info *info)
   * @info: struct address
   * @agv: argument number
   */
-void set_shell_info(shell_info *info, char **agv);
+void set_shell_info(shell_info *info, char **agv)
 {
 	int i = 0;
 
@@ -39,7 +39,7 @@ void set_shell_info(shell_info *info, char **agv);
 			;
 		info->argc = i;
 		alias_replace(info);
-		vars_replace(info);
+		substitute_vars(info);
 	}
 }
 /**
@@ -66,8 +66,8 @@ void free_shell_info(shell_info *info, int all_fields)
 		free_field(info->environ);
 		info->environ = NULL;
 		free_buffer((void **)info->cmd_buf);
-		if (info->readfd > 2)
-			close(info->readfd);
+		if (info->read_file_d > 2)
+			close(info->read_file_d);
 		custom_putchar(FLUSH_BUFFER);
 	}
 }
