@@ -57,22 +57,23 @@ void puts_error(char *str)
 }
 
 /**
- * putchar_error - outputs to stderr
- * @c: target char
+ * put_char_to_stderr - outputs a character to stderr
+ * @c: The char to write
  * Return: 1 on success else 0
  */
-int putchar_error(char c)
+int put_char_to_stderr(char c)
 {
-	static int i;
-	static char buffer[WRITE_BUF_SIZE];
+	static int buffer_index;
+	static char error_buffer[WRITE_BUF_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c == BUF_FLUSH || buffer_index >= WRITE_BUF_SIZE)
 	{
-		write(2, buffer, i);
-		i = 0;
+		write(2, error_buffer, buffer_index);
+		buffer_index = 0;
 	}
 	if (c != BUF_FLUSH)
-		buffer[i++] = c;
+		error_buffer[buffer_index++] = c;
 	return (1);
 
 }
+

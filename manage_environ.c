@@ -78,7 +78,8 @@ int add_envs_to_llist(shell_info *info)
 	size_t i;
 
 	for (i = 0; environ[i]; i++)
-		add_node_end(&node, environ[i], 0);
+		add_tail_node(&node, environ[i], 0);
 	info->env = node;
 	return (0);
 }
+

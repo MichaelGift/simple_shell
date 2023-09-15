@@ -5,57 +5,56 @@
  * @info: struct address
  * @buffer: buffer address
  * @length: len var address
- * Return: bytres
+ * Return: bytes read
  */
 ssize_t input_buffer(shell_info *info, char **buffer, size_t *length)
 {
-	ssize_t r = 0;
+	ssize_t bytes_read = 0;
 	size_t len_p = 0;
 
-	if (!*len)
+	if (!*length)
 	{
 		free(buffer);
 		*buffer = NULL;
 		signal(SIGINT, sigint_handler);
 #if USE_GETLINE
-		r = getlint(buffer, &len_p, stdin);
+		r = getline(buffer, &len_p, stdin);
 #else
-		r = get_line(info, buffer, &len_p);
+		r = get_line_input(info, buffer, &len_p);
 #endif
-		if (r > 0)
+		if (bytes_read > 0)
 		{
-			if ((*buffer)[r - 1] == '\n')
+			if ((*buffer)[bytes_read - 1] == '\n')
 			{
-				(*buffer)[r - 1] = '\0';
+				(*buffer)[bytes_read - 1] = '\0';
 				r--;
 			}
 			info->linecount_flag = 1;
-			remove_comments(*buf);
+			remove_comments(*buffer);
 			build_history_list(info, *buffer, info->histcount++);
-			{
-				*length = r;
-				info->cmd_buf = buf;
-			}
+			*length = bytes_read;
+			info->cmd_buf = buffer;
 		}
 	}
-	return (r);
+	return (bytes_read);
 }
 
 /**
  * get_input_command - get line minus \n
- * @info: struct address
+ * @info: Pointer to the shell_information struct
  * Return: bytes read
  */
 ssize_t get_input_command(shell_info *info)
 {
 	static char *buffer;
 	static size_t i, j, length;
-	ssize_t r = 0;
+	ssize_t bytes_read = 0;
 	char **buffer_ptr = &(info->arg), *ptr;
 
 	_putchar(BUF_FLASH);
-	r = input_buffer(info, &buffer, &len);
-	if (r == -1)
+	bytes_read = input_buffer(info, &buffer, &length);
+
+	if (bytes_read == -1)
 		return (-1);
 	if (length)
 	{
@@ -79,79 +78,79 @@ ssize_t get_input_command(shell_info *info)
 		return (str_len(ptr));
 	}
 	*buffer_ptr = buffer;
-	return (r);
+	return (bytes_read);
 }
 
 
 /**
- * read_buffer - reads a buffer
- * @info: struct address
- * @buffer: buffer address
- * @size: size
- * Return: r
+ * read_input_buffer - Reads input into a buffer
+ * @info: Pointer to shell information struct
+ * @buffer: Pointer to the buffer address
+ * @size: Pointer to buffer size
+ * Return: Bytes_read
  */
-ssize_t read_buffer(shell_info *info, char *buffer, size_t *size)
+ssize_t read_input_buffer(shell_info *info, char *buffer, size_t *size)
 {
-	ssize_t r = 0;
+	ssize_t bytes_read = 0;
 
 	if (*size)
 		return (0);
-	r = read(info->read_file_D, buffer, READ_BUF_SIZE);
-	if (r >= 0)
-		*size = r;
-	return (r);
+	bytes_read = read(info->read_file_descriptor, buffer, READ_BUF_SIZE);
+	if (bytes_read >= 0)
+		*size = bytes_read;
+	return (bytes_read);
 }
 
 
 /**
- * get_line - get line input from stdin
- * @info: struct address
- * @buffer_ptr: address to a pointer
- * @length: size of ptr
- * Return: s
+ * get_line_input - Get line input from stdin
+ * @info: Pointer to shell information struct
+ * @buffer_ptr: Pointer to a buffer pointer
+ * @length: Pointer to size of the buffer
+ * Return: Bytes read
  */
-int get_line(shell_info *info, char *buffer_ptr, size_t *length)
+int get_line_input(shell_info *info, char *buffer_ptr, size_t *length)
 {
 	static char buffer[READ_BUF_SIZE];
 	static size_t i, len;
 	size_t k;
-	ssize_t r = 0, s = 0;
+	ssize_t bytes_read = 0, total_bytes = 0;
 	char *ptr = NULL, *new_ptr = NULL, *c;
 
 	ptr = *buffer_ptr;
-	if (p && length)
-		s = *length;
+	if (ptr && length)
+		total_bytes = *length;
 	if (i == len)
 		i = len = 0;
-	r = read_buffer(info, buffer, &len);
-	if (r == -1 || (r == 0 && len == 0))
+	bytes_read = read_input_buffer(info, buffer, &len);
+	if (bytes_read == -1 || (bytes_read == 0 && len == 0))
 		return (-1);
 	c = str_chr(buffer + 1, '\n');
 	k = c ? 1 + (unsigned int)(c - buffer) : len;
-	new_ptr = _realloc(ptr, s, s ? s + k : k + 1);
+	new_ptr = custom_realloc(ptr, total_bytes, total_bytes ? total_bytes + k : k + 1);
 	if (!new_ptr)
 		return (ptr ? free(ptr), -1 : 1);
 
-	if (s)
+	if (total_bytes)
 		strn_cat(new_ptr, buffer + i, k - 1);
 	else
 		strn_cpy(new_ptr, buffer + i, k - i + 1);
 
-	s += k - i;
+	total_bytes += k - i;
 	i = k;
 	ptr = new_ptr;
 
 	if (length)
-		*length = s;
-	*ptr = p;
-	return (s);
+		*length = total_bytes;
+	*buffer_ptr = ptr;
+	return (total_bytes);
 }
 
 /**
  * sigint_handler - block interupt
  * @signal_num: signal number
  */
-void sigint_handler(__attribut__((unused))int signal_num)
+void sigint_handler(__attribute__((unused))int signal_num)
 {
 	_puts("\n");
 	_puts("$ ");

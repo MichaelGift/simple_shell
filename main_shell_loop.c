@@ -1,45 +1,53 @@
 #include "shell.h"
 
 /**
- * hsh - the main loop.
- * @info: struct address
- * @agv: argument vector
+ * main_shell_loop - Main shell loop
+ * @info: Pointer to the shell_information_struct
+ * @args: argument vector from main()
+ *
  * Return: 0 on success or else 1
  */
-int hsh(shell_info *info, char **agv)
+int main_shell_loop(shell_info *info, char **args)
 {
-	ssize_t r = 0;
-	int builtin_ret = 0;
+	ssize_t read_result = 0;
+	int builtin_result = 0;
 
-	while (r != -1 && builtin_ret != -2)
+	while (read_result != -1 && builtin_result != -2)
 	{
-		clear_shell_info(info);
+		initialize_shell_info(info);
 		if (is_interactive(info))
 			_puts("$ ");
-		putchar_error(BUF_FLUSH);
-		r = get_input(info);
-		if (r != -1)
+
+		put_char_to_stderr(BUF_FLUSH);
+
+		read_result = get_input_command(info);
+		if (read_result != -1)
 		{
 			set_shell_info(info, agv);
-			builtin_ret = find_builtin(info);
-			if (builtin_ret == -1)
-				find_cmd(info);
+			builtin_result = find_and_execute_builtin(info);
+			if (builtin_result == -1)
+				find_and_execute_cmd(info);
 		}
 		else if (is_interactive(info))
 			_putchar('\n');
+
 		free_shell_info(info, 0);
 	}
-	write_shell_history(info);
+
+	write_shell_history_to_file(info);
 	free_shell_info(info, 1);
+
 	if (!is_interactive(info) && info->status)
 		exit(info->status);
-	if (builtin_ret == -2)
+
+	if (builtin_result == -2)
 	{
-		if (info->err_num == -1)
+		if (info->error_number == -1)
 			exit(info->status);
-		exit(info->err_num);
+
+		exit(info->error_number);
 	}
-	return (builtin_ret);
+	return (builtin_result);
 }
 
 /**

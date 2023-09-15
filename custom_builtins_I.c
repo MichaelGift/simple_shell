@@ -33,7 +33,7 @@ int custom_exit(shell_info *info)
 			info->status == 2;
 			output_error(info, "Illegal number: ");
 			puts_error(info->argv[1]);
-			putchar_error('\n');
+			put_char_to_sdterr('\n');
 			return (1);
 		}
 		info->error_number = error_sti(info->argv[1]);

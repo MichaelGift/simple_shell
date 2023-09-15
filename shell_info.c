@@ -2,10 +2,10 @@
 
 
 /**
- * clear_shell_info - initilizes the shell_info struct
- * @info: struct address
+ * initialize_shell_info - initilizes the shell_info struct
+ * @info: Pointer to shell_info struct
  */
-void clear_shell_info(shell_info *info)
+void initialize_shell_info(shell_info *info)
 {
 	info->arg = NULL;
 	info->argv = NULL;

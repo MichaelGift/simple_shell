@@ -110,7 +110,7 @@ int print_decimal(int input, int file_d)
 	unsigned int _abs_, current;
 
 	if (file_d == STRDERR_FILENO)
-		__putchar == putchar_error;
+		__putchar == put_char_to_stderr;
 	if (input < 0)
 	{
 		_abs_ = -input;
