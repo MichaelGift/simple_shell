@@ -1,16 +1,16 @@
 #include "shell.h"
 /**
- * starts_with - checks the if needle starts with haystack
- * @haystack: string to search
- * @needle: the substring to find
+ * if_starts_with_str - checks the if target_str starts with str
+ * @str: string to search
+ * @target_str: the substring to find
  * Return: address of next char of haystack or NULL
  */
-char *starts_with(const char *haystack, const char *needle)
+char *if_starts_with_str(const char *str, const char *target_str)
 {
-	while (*needle)
-		if (*needle++ != *haystack++)
+	while (*target_str)
+		if (*target_str++ != *str++)
 			return (NULL);
-	return ((char *)haystack);
+	return ((char *)str);
 }
 
 /**

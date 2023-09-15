@@ -1,11 +1,11 @@
 #include "shell.h"
 
 /**
- * my_alias - stand in for builtin alias
+ * custom_alias - stand in for builtin alias
  * @info: struct address
  * Return: 0
  */
-int my_alias(shell_info *info)
+int custom_alias(shell_info *info)
 {
 	int i = 0;
 	char *p = NULL;
@@ -38,16 +38,16 @@ int my_alias(shell_info *info)
  */
 int alias_print(str_ll *node)
 {
-	char *p = NULL, *a = NULL;
+	char *ptr = NULL, *a = NULL;
 
 	if (node)
 	{
-		p = str_chr(node->str, '=');
-		for (a = node->str; a <= p; a++)
-			_putchar(*a);
-		_putchar('\'');
-		_puts(p + 1);
-		_puts("'\n");
+		ptr = str_chr(node->str, '=');
+		for (a = node->str; a <= ptr; a++)
+			custom_putchar(*a);
+		custom_putchar('\'');
+		custom_puts(ptr + 1);
+		custom_puts("'\n");
 		return (0);
 	}
 	return (1);
@@ -71,7 +71,7 @@ int alias_set(shell_info *info, char *str)
 		return (alias_unset(info, str));
 
 	alias_unset(info, str);
-	return (add_node_end(&(info->alias), str, 0) ==  NULL);
+	return (add_tail_node(&(info->alias), str, 0) ==  NULL);
 }
 
 /**
@@ -97,8 +97,8 @@ int alias_unset(shell_info *info, char *str)
 
 }
 /**
- * command_history - displays all previously typed commands
- * @info: struct address
+ * command_history - Displays all previously typed commands
+ * @info: Pointer to shell_information struct
  * Return: 0
  */
 int command_history(shell_info *info)

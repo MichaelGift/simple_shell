@@ -8,7 +8,7 @@
 
 int main(int arg_c, char **arg_v)
 {
-	shell_info info[] = { INFO_INIT };
+	shell_info info[] = { INITIALIZE };
 	int file_d = 2;
 
 	asm ("mov %1, %0\n\t"
@@ -28,7 +28,7 @@ int main(int arg_c, char **arg_v)
 				puts_error(": 0: Cannot open ");
 				puts_error(arg_v[1]);
 				put_char_to_stderr('\n');
-				put_char_to_stderr(BUF_FLUSH);
+				put_char_to_stderr(FLUSH_BUFFER);
 				exit(127);
 			}
 			return (EXIT_FAILURE);
@@ -36,7 +36,7 @@ int main(int arg_c, char **arg_v)
 		info->read_file_d = file_d;
 	}
 	add_envs_to_llist(info);
-	read_history(info);
+	read_history_from_file(info);
 	main_shell_loop(info, arg_v);
 	return (EXIT_SUCCESS);
 }

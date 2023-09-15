@@ -33,19 +33,19 @@ str_ll *add_head_node(str_ll **head, const char *str, int num)
 }
 
 /**
- * print_list_str - it prints only the str element of a list_t linked list
- * @h: pointer to first node
- * Return: sixe of list
+ * print_str_llist - it prints only the str element of a str_ll linked list
+ * @head: Pointer to head node
+ * Return: size of str_ll
  */
-size_t print_list_str(const str_ll *h)
+size_t print_str_llist(const str_ll *head)
 {
 	size_t i = 0;
 
-	while (h)
+	while (head)
 	{
-		_puts(h->str ? h->str : "(nil)");
-		_puts("\n");
-		h = h->next;
+		custom_puts(head->str ? head->str : "(nil)");
+		custom_puts("\n");
+		head = head->next;
 		i++;
 	}
 	return (i);
@@ -142,9 +142,9 @@ int delete_node_at_index(str_ll **head, unsigned int index)
  * @head_ptr: address of pointer to head node
  * Return: void
  */
-void free_list(list_t **head_ptr)
+void free_list(str_ll **head_ptr)
 {
-	list_t *node, *next_node, *head;
+	str_ll *node, *next_node, *head;
 
 if (!head_ptr || !*head_ptr)
 return;

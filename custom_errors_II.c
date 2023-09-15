@@ -35,12 +35,12 @@ char *number_converter(long int num, int base, int flags)
 }
 
 /**
- * remove_comments - replace '#' with '\0'
+ * replace_comments - replace '#' with '\0'
  * @buffer: string address
  *
  * Return: 0
  */
-void remove_comments(char *buffer)
+void replace_comments(char *buffer)
 {
 	int i;
 
@@ -105,7 +105,7 @@ void output_error(shell_info *info, char *e_str_t)
  */
 int print_decimal(int input, int file_d)
 {
-	int (*__putchar)(char) = _putchar;
+	int (*__putchar)(char) = custom_putchar;
 	int i, count = 0;
 	unsigned int _abs_, current;
 

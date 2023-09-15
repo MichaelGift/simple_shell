@@ -101,7 +101,7 @@ int alias_replace(shell_info *info)
  * @info: struct address
  * Return: 1 on success, else 0
  */
-int substitute_vars(info_t *info)
+int substitute_vars(shell_info *info)
 {
 	int i = 0;
 	str_ll *node;
@@ -113,13 +113,13 @@ int substitute_vars(info_t *info)
 		if (!str_cmp(info->argv[i], "$?"))
 		{
 			replace_string(&(info->argv[i]),
-					str_dup(convert_number(info->status, 10, 0)));
+					str_dup(number_converter(info->status, 10, 0)));
 			continue;
 		}
 		if (!str_cmp(info->argv[i], "$$"))
 		{
 			replace_string(&(info->argv[i]),
-					str_dup(convert_number(getpid(), 10, 0)));
+					str_dup(number_converter(getpid(), 10, 0)));
 			continue;
 		}
 		node = node_starts_with(info->env, &info->argv[i][1], '=');

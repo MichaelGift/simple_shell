@@ -13,7 +13,7 @@ char *get_env(shell_info *info, const char *name)
 
 	while (node)
 	{
-		p = starts_with(node->str, name);
+		p = if_starts_with_str(node->str, name);
 		if (p && *p)
 			return (p);
 		node = node->next;
@@ -57,13 +57,13 @@ int set_my_env(shell_info *info)
 }
 
 /**
- * my_env - prints current env
+ * custom_env - prints current env
  * @info: struct address
  * Return: 0
  */
-int my_env(shell_info *info)
+int custom_env(shell_info *info)
 {
-	print_list_str(info->env);
+	print_str_llist(info->env);
 	return (0);
 }
 

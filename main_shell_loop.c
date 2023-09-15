@@ -16,9 +16,9 @@ int main_shell_loop(shell_info *info, char **args)
 	{
 		initialize_shell_info(info);
 		if (is_interactive(info))
-			_puts("$ ");
+			custom_puts("$ ");
 
-		put_char_to_stderr(BUF_FLUSH);
+		put_char_to_stderr(FLUSH_BUFFER);
 
 		read_result = get_input_command(info);
 		if (read_result != -1)
@@ -29,7 +29,7 @@ int main_shell_loop(shell_info *info, char **args)
 				find_and_execute_cmd(info);
 		}
 		else if (is_interactive(info))
-			_putchar('\n');
+			custom_putchar('\n');
 
 		free_shell_info(info, 0);
 	}
@@ -51,18 +51,18 @@ int main_shell_loop(shell_info *info, char **args)
 }
 
 /**
- * find_builtin - find builtin command
+ * find_and_execute_builtin - find builtin command
  * @info: struct address
  * Return: -2 builtin signal,-1 not found, 0 success, 1 unsuccessful
  */
-int find_builtin(shell_info *info)
+int find_and_execute_builtin(shell_info *info)
 {
-	int i, built_in_ret = -1;
+	int i, built_in_result = -1;
 	builtin_comms builtin_commands[] = {
 		{"exit", custom_exit},
 		{"env", custom_env},
 		{"help", custom_help},
-		{"history", custom_history},
+		{"history", command_history},
 		{"setenv", set_my_env},
 		{"unsetenv", unset_my_env},
 		{"cd", custom_cd},
@@ -70,23 +70,23 @@ int find_builtin(shell_info *info)
 		{NULL, NULL}
 	};
 
-	for (i = 0; builtin_commands[i].type, i++)
+	for (i = 0; builtin_commands[i].command, i++)
 	{
-		if (str_cmp(info->argv[0], builtin_commands[i].type) == 0)
+		if (str_cmp(info->argv[0], builtin_commands[i].command) == 0)
 		{
 			info->line_count++;
-			built_in_ret = builtin_commands[i].func(info);
+			built_in_result = builtin_commands[i].function(info);
 			break;
 		}
 	}
-	return (built_in_ret);
+	return (built_in_result);
 }
 
 /**
  * find_command - find a command in PATH
  * @info: struct address
  */
-void find_command(shell_info *info)
+void find_and_execute_cmd(shell_info *info)
 {
 	char *path = NULL;
 	int i, k;
@@ -103,7 +103,7 @@ void find_command(shell_info *info)
 	if (!k)
 		return;
 
-	path = find_path(info, get_env(info, "PATH="), infor->argv[0]);
+	path = find_cmd_path(info, get_env(info, "PATH="), infor->argv[0]);
 	if (path)
 	{
 		info->path = path;
@@ -117,7 +117,7 @@ void find_command(shell_info *info)
 		else if (*(info->arg) != '\n')
 		{
 			info->status = 127;
-			print_error(info, "not found\n");
+			output_error(info, "not found\n");
 		}
 	}
 }
@@ -138,7 +138,7 @@ void fork_command(shell_info *info)
 	}
 	if (child_pid == 0)
 	{
-		if (execve(info->path, info->argv, get_environ(info)) == -1)
+		if (execve(info->path, info->argv, get_shell_environ(info)) == -1)
 		{
 			free_shell_info(info, 1);
 			if (errno ==  EACCES)
@@ -153,7 +153,7 @@ void fork_command(shell_info *info)
 		{
 			info->status = WEXITSTATUS(info->status);
 			if (info->status == 126)
-				print_error(info, "Permission denied\n");
+				output_error(info, "Permission denied\n");
 		}
 	}
 }

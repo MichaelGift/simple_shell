@@ -1,17 +1,17 @@
 #include "shell.h"
 /**
- * ffree - this fress a string of strings
+ * free_field - this fress a string of strings
  * @pp: string of strings
  */
-void ffree(char **pp)
+void free_field(char **pp)
 {
 	char **a = pp;
 
 	if (!pp)
 		return;
 	while (*pp)
-		ffree(*pp++);
-	ffree(a);
+		free(*pp++);
+	free(a);
 }
 
 /**

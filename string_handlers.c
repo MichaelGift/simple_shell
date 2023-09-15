@@ -16,13 +16,13 @@ char *str_chr(char *str, char c)
 }
 
 /**
- * strn_copy - copy str
+ * strn_cpy - copy str
  * @dest: string destination
  * @src: string source
  * @len: length of chars
  * Return: concatenated string
  */
-char *strn_copy(char *dest, char *src, int len)
+char *strn_cpy(char *dest, char *src, int len)
 {
 	int i = 0, j;
 	char *s = dest;

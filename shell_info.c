@@ -68,6 +68,6 @@ void free_shell_info(shell_info *info, int all_fields)
 		free_buffer((void **)info->cmd_buf);
 		if (info->readfd > 2)
 			close(info->readfd);
-		putchar(BUF_FLUSH);
+		custom_putchar(FLUSH_BUFFER);
 	}
 }

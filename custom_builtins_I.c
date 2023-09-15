@@ -8,12 +8,12 @@
  */
 int custom_help(shell_info *info)
 {
-	char **arg_array;
+	char **args;
 
-	arg_array = info->argv;
-	_puts("Help call works,>>NOT IMPLEMENTED<<\n");
+	args = info->argv;
+	custom_puts("Help call works,>>NOT IMPLEMENTED<<\n");
 	if (0)
-		_puts(*arg_array);
+		custom_puts(*args);
 	return (0);
 }
 /**
@@ -33,7 +33,7 @@ int custom_exit(shell_info *info)
 			info->status == 2;
 			output_error(info, "Illegal number: ");
 			puts_error(info->argv[1]);
-			put_char_to_sdterr('\n');
+			put_char_to_stderr('\n');
 			return (1);
 		}
 		info->error_number = error_sti(info->argv[1]);
@@ -55,7 +55,7 @@ int custom_cd(shell_info *info)
 
 	cwd = getcwd(buffer, 1024);
 	if (!cwd)
-		_puts("Cannot get CWD check >>custom_builts/customk_cd<<\n");
+		custom_puts("Cannot get CWD check >>custom_builts/customk_cd<<\n");
 	if (!info->argv[1])
 	{
 		dir = get_env(info, "HOME=");
@@ -69,11 +69,11 @@ int custom_cd(shell_info *info)
 	{
 		if (!get_env(info, "OLDPWD="))
 		{
-			_puts(s);
-			_putchar('\n');
+			custom_puts(s);
+			custom_putchar('\n');
 			return (1);
 		}
-		_puts(get_env(info, "OLDPWD=")), _putchar('\n');
+		custom_puts(get_env(info, "OLDPWD=")), custom_putchar('\n');
 		chdir_ret =
 			chdir((dir = get_env(info, "OLDPWD=")) ? dir : "/");
 	}
@@ -82,7 +82,7 @@ int custom_cd(shell_info *info)
 	if (chdir_ret == -1)
 	{
 		output_error(info, "Cannot CD to ");
-		puts_error(info->argv[1]), putchar_error('\n');
+		puts_error(info->argv[1]), put_char_to_stderr('\n');
 	}
 	else
 	{

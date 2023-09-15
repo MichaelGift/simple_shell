@@ -19,14 +19,14 @@ int set_env(shell_info *info, char *var, char *val)
 	buffer = malloc(str_len(var) + str_len(val) + 2);
 	if (!buffer)
 		return (1);
-	str_copy(buffer, var);
+	str_cpy(buffer, var);
 	str_cat(buffer, "=");
 	str_cat(buffer, val);
 	node = info->env;
 
 	while (node)
 	{
-		p = starts_with(node->str, var);
+		p = if_starts_with_str(node->str, var);
 		if (p && *p == '=')
 		{
 			free(node->str);
@@ -36,7 +36,7 @@ int set_env(shell_info *info, char *var, char *val)
 		}
 		node = node->next;
 	}
-	add_node_end(&(info->env), buffer, 0);
+	add_tail_node(&(info->env), buffer, 0);
 	free(buffer);
 	info->env_changed = 1;
 	return (0);
@@ -57,7 +57,7 @@ int unset_env(shell_info *info, char *var)
 		return (0);
 	while (node)
 	{
-		ptr = starts_with(node->str, var);
+		ptr = if_starts_with_str(node->str, var);
 		if (p && *p == '=')
 		{
 			info->env_changed = delete_node_at_index(&(info->env), i);
@@ -71,15 +71,15 @@ int unset_env(shell_info *info, char *var)
 	return (info->env_changed);
 }
 /**
- * get_environ - returns array copy of our environ
+ * get_shell_environ - returns array copy of our environ
  * @info: struct address
  * Return: Always 0
  */
-char **get_environ(shell_info *info)
+char **get_shell_environ(shell_info *info)
 {
 	if (!info->environ || info->env_changed)
 	{
-		info->environ = list_to_strings(info->env);
+		info->environ = llist_to_strarr(info->env);
 		info->env_changed = 0;
 	}
 	return (info->environ);

@@ -30,8 +30,8 @@ ssize_t input_buffer(shell_info *info, char **buffer, size_t *length)
 				r--;
 			}
 			info->linecount_flag = 1;
-			remove_comments(*buffer);
-			build_history_list(info, *buffer, info->histcount++);
+			replace_comments(*buffer);
+			add_history_entry(info, *buffer, info->histcount++);
 			*length = bytes_read;
 			info->cmd_buf = buffer;
 		}
@@ -51,7 +51,7 @@ ssize_t get_input_command(shell_info *info)
 	ssize_t bytes_read = 0;
 	char **buffer_ptr = &(info->arg), *ptr;
 
-	_putchar(BUF_FLASH);
+	custom_putchar(FLUSH_BUFFER);
 	bytes_read = input_buffer(info, &buffer, &length);
 
 	if (bytes_read == -1)
@@ -61,10 +61,10 @@ ssize_t get_input_command(shell_info *info)
 		j = i;
 		ptr = buffer + i;
 
-		check_input_chain(info, buffer, &j, i, length);
+		check_cmd_chain(info, buffer, &j, i, length);
 		while (j < len)
 		{
-			if (is_chain_input(info, buffer, &j))
+			if (is_chain_delimiter(info, buffer, &j))
 				break;
 			j++;
 		}
@@ -95,7 +95,7 @@ ssize_t read_input_buffer(shell_info *info, char *buffer, size_t *size)
 
 	if (*size)
 		return (0);
-	bytes_read = read(info->read_file_descriptor, buffer, READ_BUF_SIZE);
+	bytes_read = read(info->read_file_descriptor, buffer, READ_BUFFER_SIZE);
 	if (bytes_read >= 0)
 		*size = bytes_read;
 	return (bytes_read);
@@ -111,7 +111,7 @@ ssize_t read_input_buffer(shell_info *info, char *buffer, size_t *size)
  */
 int get_line_input(shell_info *info, char *buffer_ptr, size_t *length)
 {
-	static char buffer[READ_BUF_SIZE];
+	static char buffer[READ_BUFFER_SIZE];
 	static size_t i, len;
 	size_t k;
 	ssize_t bytes_read = 0, total_bytes = 0;
@@ -152,8 +152,8 @@ int get_line_input(shell_info *info, char *buffer_ptr, size_t *length)
  */
 void sigint_handler(__attribute__((unused))int signal_num)
 {
-	_puts("\n");
-	_puts("$ ");
-	_putchar(BUF_FLUSH);
+	custom_puts("\n");
+	custom_puts("$ ");
+	custom_putchar(FLUSH_BUFFER);
 }
 

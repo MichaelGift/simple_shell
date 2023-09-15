@@ -10,14 +10,14 @@
 int put_file_d(char c, int file_d)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WRITE_BUFFER_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c == FLUSH_BUFFER || i >= WRITE_BUFFER_SIZE)
 	{
 		write(file_d, buf, i);
 		i = 0;
 	}
-	if (c  != BUF_FLUSH)
+	if (c  != FLUSH_BUFFER)
 		buf[i++] = c;
 	return (1);
 }
@@ -51,7 +51,7 @@ void puts_error(char *str)
 		return;
 	while (str[i] != '\0')
 	{
-		putchar_error(str[i]);
+		put_char_to_stderr(str[i]);
 		i++;
 	}
 }
@@ -64,14 +64,14 @@ void puts_error(char *str)
 int put_char_to_stderr(char c)
 {
 	static int buffer_index;
-	static char error_buffer[WRITE_BUF_SIZE];
+	static char error_buffer[WRITE_BUFFER_SIZE];
 
-	if (c == BUF_FLUSH || buffer_index >= WRITE_BUF_SIZE)
+	if (c == FLUSH_BUFFER || buffer_index >= WRITE_BUFFER_SIZE)
 	{
 		write(2, error_buffer, buffer_index);
 		buffer_index = 0;
 	}
-	if (c != BUF_FLUSH)
+	if (c != FLUSH_BUFFER)
 		error_buffer[buffer_index++] = c;
 	return (1);
 

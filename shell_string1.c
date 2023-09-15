@@ -43,40 +43,40 @@ char *str_dup(const char *str)
 }
 
 /**
- * _puts - this prints an input string
+ * custom_puts - this prints an input string
  * @str: the string to that will be printed
  * Return: nothing
  */
-void _puts(char *str)
+void custom_puts(char *str)
 {
-	int i = 0;
+	int index = 0;
 
 	if (!str)
 		return;
-	while (str[i] != '\0')
+	while (str[index] != '\0')
 	{
-		_putchar(str[i]);
+		custom_putchar(str[index]);
 		i++;
 	}
 }
 
 /**
- * _putchar - this writes the character c to stdout
+ * custom_putchar - this writes the character c to stdout
  * @c: the character to print
  * Return: on success 1.
  * on error, -1 is returned, and errno is set appropriately.
  */
-int _putchar(char c)
+int custom_putchar(char c)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[WRITE_BUFFER_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c == FLUSH_BUFFER || i >= WRITE_BUFFER_SIZE)
 	{
 		write(1, buf, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
+	if (c != FLUSH_BUFFER)
 		buf[i++] = c;
 	return (1);
 }

@@ -1,52 +1,51 @@
 #include "shell.h"
 /**
- * list_to_strings - will return an array of stringsof the list->str
+ * llist_to_strarr - will return an array of strings of the list
  * @head: pointer to the first node
  * Return: array of strings
  */
-char **list_to_strings(list_t *head)
+char **llist_to_strarr(str_ll *head)
 {
-	list_t *node = head;
-size_t i = list_len(head), j;
-char **strs;
-char *str;
-
-if (!head || !i)
-return (NULL);
-strs = malloc(sizeof(char *) * (i + 1));
-if (!strs)
-return (NULL);
-for (i = 0; node; node = node->next, i++)
-{
-str = malloc(_strlen(node->str) + 1);
-if (!str)
-{
-for (j = 0; j < i; j++)
-free(strs[j]);
-free(strs);
-return (NULL);
-}
-
-str = _strcpy(str, node->str);
-strs[i] = str;
-}
-strs[i] = NULL;
-return (strs);
+	str_ll *node = head;
+	size_t i = list_str_ll_len(head), j;
+	char **strs;
+	char *str;
+	
+	if (!head || !i)
+		return (NULL);
+	strs = malloc(sizeof(char *) * (i + 1));
+	if (!strs)
+		return (NULL);
+	for (i = 0; node; node = node->next, i++)
+	{
+		str = malloc(str_len(node->str) + 1);
+		if (!str)
+		{
+			for (j = 0; j < i; j++)
+			free(strs[j]);
+			free(strs);
+			return (NULL);
+		}
+		str = str_cpy(str, node->str);
+		strs[i] = str;
+	}
+	strs[i] = NULL;
+	return (strs);
 }
 
 /**
- * list_len - this determines the lenght of linked list
- * @h: pointer to first node
+ * list_str_ll_len - this determines the lenght of linked list
+ * @head: Pointer to head node
  * Return: size of list
  */
-size_t list_len(const list_t *h)
+size_t list_str_ll_len(const str_ll *head)
 {
 	size_t i = 0;
 
-	while (h)
+	while (head)
 
 	{
-		h = h->next;
+		head = head->next;
 		i++;
 	}
 	return (i);
@@ -59,13 +58,13 @@ size_t list_len(const list_t *h)
  * @c: the next character afetr prefix to match
  * Return: match node or null
  */
-list_t *node_starts_with(list_t *node, char *prefix, char c)
+str_ll *node_starts_with(str_ll *node, char *prefix, char c)
 {
 	char *p = NULL;
 
 	while (node)
 	{
-		p = starts_with(node->str, prefix);
+		p = if_starts_with_str(node->str, prefix);
 		if (p && ((c == -1) || (*p == c)))
 			return (node);
 		node = node->next;
@@ -79,7 +78,7 @@ list_t *node_starts_with(list_t *node, char *prefix, char c)
  * @node: pointer to the node
  * Return: index of node or -1
  */
-ssize_t get_node_index(list_t *head, list_t *node)
+ssize_t get_node_index(str_ll *head, str_ll *node)
 {
 	size_t i = 0;
 
@@ -94,23 +93,23 @@ ssize_t get_node_index(list_t *head, list_t *node)
 }
 
 /**
- * print_list - prints all elements of a list_t linked list
- * @h: pointer to first node
+ * print_llist - prints all elements of a str_ll linked list
+ * @head: pointer to head node
  * Return: size of list
  */
-size_t print_list(const list_t *h)
+size_t print_llist(const str_ll *head)
 {
 	size_t i = 0;
 
-	while (h)
+	while (head)
 	{
-		_puts(convert_number(h->num, 10, 0));
-		_putchar(' : ');
-			_putchar(' ');
-			_puts(h->str ? h->str : "(nil)");
-			_puts("\n");
-			h = h->next;
-			i++;
+		custom_puts(number_converter(head->num, 10, 0));
+		custom_putchar(' : ');
+		custom_putchar(' ');
+		custom_puts(head->str ? head->str : "(nil)");
+		custom_puts("\n");
+		head = head->next;
+		i++;
 	}
 	return (i);
 }
