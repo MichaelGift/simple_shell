@@ -53,6 +53,10 @@ typedef struct string_llist
 /**
  * struct shell_information - contains information about the shell as a while
  * @read_file_d: The file descriptor to read line input
+ * @arg: will be a string generated from getline containing arguements
+ * @argv: contains an array of strings generated from arg
+ * @path: this is a string path for the current command
+ * @argc: this contains the argument count
  */
 typedef struct shell_information
 {
