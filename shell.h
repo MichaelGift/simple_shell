@@ -57,6 +57,19 @@ typedef struct string_llist
  * @argv: contains an array of strings generated from arg
  * @path: this is a string path for the current command
  * @argc: this contains the argument count
+ * @line_count: contains the error count
+ * @err_num: this contains the error code for exit()s
+ * @linecount_flag: if on count this line of input
+ * @fname: this is the program filename
+ * @env_changed: on if the environ was changed
+ * @status: contains the return status of the last exec'd command
+ * @env: lists of local copy of environ
+ * @environ: this is the custom modified copy of environ from LL env
+ * @history: contains the history node
+ * @alias: is the alias node
+ * @cmd_buf: entails the address of pointer to cmd_buf, on if chaining
+ * @cmd_buf_type: CMD_type ||, &&, ;
+ * @histcount: this is the history line number count
  */
 typedef struct shell_information
 {
@@ -80,8 +93,11 @@ typedef struct shell_information
 	int read_file_d;
 	int histcount;
 } shell_info;
-
-/**/
+/**
+ * struct builtin_commands - contains a builtin string and related funtion
+ * @command: this is the builtin command flag
+ * @function: the function
+ */
 typedef struct builtin_commands
 {
 	char *command;
@@ -108,7 +124,7 @@ void free_shell_info(shell_info *, int);
 /* Errors */
 void puts_error(char *);
 int puts_file_d(char *, int);
-int put_file_d(char , int);
+int put_file_d(char, int);
 int put_char_to_stderr(char);
 void replace_comments(char *);
 void output_error(shell_info *, char *);
