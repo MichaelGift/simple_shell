@@ -1,8 +1,8 @@
 #include "shell.h"
 /**
  * main - the entry point
- * @arg_c: arg vector
- * @arg_v: arg count
+ * @arg_c: argument vector
+ * @arg_v: argument count
  * Return: 0 on success, 1 on error
  */
 
